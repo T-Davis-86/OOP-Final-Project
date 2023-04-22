@@ -106,6 +106,10 @@ class Game:
                         playersXY = math.sqrt((PordX**2) + (PordY**2))
                         if playersXY < closestPlayer:
                             closestPlayer = playersXY
+                            closeP = PordX
+                            closeP = PordX
+                    PordX = closeP
+                    PordX = closeP
                 for tres in self.listOfTreasures:
                     if tres.x != plyr.x and tres.y != plyr.y or tres.x == plyr.x and tres.y != plyr.y or tres.x != plyr.x and tres.y == plyr.y:
                         TordX = tres.x - plyr.x
