@@ -21,15 +21,24 @@ class Game:
         self.listOfTreasures = []
         self.listOfWeapons = []
         p = 1
+
+        # Creating the number of players designated by the user
+
         for plyrs in range(numPlayers):
             positionx = rand.randrange(self.gameBoardWidth)
             positiony = rand.randrange(self.gameBoardHeight)
             player = Player(positionx,positiony,str(p))
             self.listOfPlayers.append(player)
             p += 1
+        
+        # Creating the number of AI Players as designated by user
+
         while (len(self.listOfPlayers) - 1) < AIplayers:
             positionx = rand.randrange(self.gameBoardWidth)
-            positiony = rand.randrange(self.gameBoardHeight)            
+            positiony = rand.randrange(self.gameBoardHeight) 
+
+            # Check to make sure players and items aren't stacked on top of one another
+                       
             for position in self.listOfPlayers:
                 if position.x == positionx and position.y == positiony:
                     positionx = rand.randrange(self.gameBoardWidth)
@@ -45,6 +54,8 @@ class Game:
             player = AIPlayer(positionx,positiony,str(p))
             self.listOfPlayers.append(player)
             p += 1
+
+        # Creating all the items for the game
 
         t1 = Treasure("silver","S", 20, rand.randrange(self.gameBoardWidth), rand.randrange(self.gameBoardHeight))
         self.listOfTreasures.append(t1)
@@ -70,6 +81,7 @@ class Game:
             
             # get the player object for the player whose turn it is
             currentPlayer = self.listOfPlayers[currentPlayerNum];
+            
             # ask the player what they would like to do
             if (type(currentPlayer) == AIPlayer):
                 if currentPlayer.energy <= 2.5:
@@ -98,6 +110,7 @@ class Game:
                 total = players.getPoints()
                 winner = players.gameBoardSymbol
                 print("Player " + str(winner) + " wins!")
+            # This is incase players didn't collect any points but eliminated all other players
             if len(self.listOfPlayers) == 1:
                 winner = players.gameBoardSymbol
                 print("Player " + str(winner) + " wins!")
@@ -109,12 +122,13 @@ class Game:
                 direction = input("Which direction (r, l, u, or d)? ")
                 distance = int(input("How Far? "))
                 plyr.move(direction, distance, self.gameBoardWidth, self.gameBoardHeight, plyr.x, plyr.y)
+            
+            # This is for just the AI Players algorithm
             elif (type(plyr) == AIPlayer):
                 closestPlayer = math.sqrt((self.gameBoardWidth**2) + (self.gameBoardHeight**2))
                 closestTreasure = math.sqrt((self.gameBoardWidth**2) + (self.gameBoardHeight**2))
                 
-                # AI Player compares whats closer: Player or treasure
-                
+                # AI Player compares whats closer: Player or treasure by calculating the magnitude of a vector
                 for allplayers in self.listOfPlayers:
                     if allplayers.x != plyr.x and allplayers.y != plyr.y or allplayers.x == plyr.x and allplayers.y != plyr.y or allplayers.x != plyr.x and allplayers.y == plyr.y:
                         PordX = allplayers.x - plyr.x
@@ -139,7 +153,7 @@ class Game:
                     TordX = shortX
                     TordY = shortY
                 
-                # AI Player deciding whether to attack Player or get Treasure                
+                # AI Player deciding whether to attack Player or get Treasure by which is closer                
                 
                 if closestPlayer < closestTreasure:
                     closestObject = closestPlayer
@@ -176,10 +190,10 @@ class Game:
                                 distance = abs(ordY)
                     print("Which direction (r, l, u, or d)? ",direction)
                     print("How Far? ", distance)
+                    # Uses the same player move method as regular players
                     plyr.move(direction,distance,self.gameBoardWidth,self.gameBoardHeight, plyr.x, plyr.y)
                 
-                # AI player will teleport if distance from other players is too far
-                
+                # AI player will teleport if distance from other players is too far and will lose energy each time
                 elif closestObject > 6:
                     plyr.x = rand.randrange(self.gameBoardWidth)
                     plyr.y = rand.randrange(self.gameBoardHeight)
@@ -193,6 +207,8 @@ class Game:
                     print("You collected",treasure.name,"worth",treasure.pointValue,"points!")
                     self.listOfTreasures.remove(treasure)  # remove the treasure from the list of available treasures
                     break
+            
+            # This prevents the AI Players from caputuring weapons
             if (type(plyr) == Player):
                 for weapon in self.listOfWeapons:
                     if plyr.x == weapon.x and plyr.y == weapon.y:
@@ -202,19 +218,25 @@ class Game:
                             self.listOfWeapons.remove(weapon)  # remove the treasure from the list of available treasures
                             print(plyr.strikerange)
                             break
+            
+            # This is for eliminating players
             for ply in self.listOfPlayers:
                 if ply.x == plyr.x and ply.y == plyr.y:
                     if ply.gameBoardSymbol != plyr.gameBoardSymbol:
                         print("You eliminated player", ply.gameBoardSymbol, "from the game!")
                         self.listOfPlayers.remove(ply)
                         break
+        # Different amounts of energy when resting for players vs. AI Players
         elif action == "r":
             if (type(plyr) == Player):
                 plyr.energy += 4.0
             elif (type(plyr) == AIPlayer):
                 plyr.energy += random.randint(3,5)
+        
+        # The attack action which allows only real players use weapons
         elif action == "a":
             for attack in self.listOfPlayers:
+                # Uses the magnitude of a vector to determine whether players are within striking range
                 if attack.x != plyr.x and attack.y == plyr.y or attack.x == plyr.x and attack.y != plyr.y or attack.x != plyr.x and attack.y != plyr.y:
                     coordx = attack.x - plyr.x
                     coordy = attack.y - plyr.y
@@ -222,14 +244,17 @@ class Game:
                     if magXY <= plyr.strikerange:
                         print("You eliminated player", attack.gameBoardSymbol, "from the game!")
                         self.listOfPlayers.remove(attack)
-                       
+        
+        # For if a wrong input was entered              
         else :
             print("Sorry, that is not a valid choice")
-
+    
+    # Updates the players stats for points and energy
     def printUpdatedPlayerInformation(self):
         for p in self.listOfPlayers:
             print("Player " + p.gameBoardSymbol + " has " + str(p.getPoints()) + " points and has " + str(p.energy) + " energy")
-      
+
+    # Creation of the gameboard - Didn't make any changes here  
     def drawUpdatedGameBoard(self) :     
         # loop through each game board space and either print the gameboard symbol
         # for what is located there or print a dot to represent nothing is there
@@ -248,7 +273,8 @@ class Game:
                 print(symbolToPrint,end="")
             print() # go to next row
         print()
-       
+
+    # Game Instructions - I didn't make any changes here   
     def printInstructions(self) :
         print("Players move around the game board collecting treasures worth points")
         print("The game ends when all treasures have been collected or only 1 player is left")
