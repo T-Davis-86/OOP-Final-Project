@@ -30,6 +30,18 @@ class Game:
         while (len(self.listOfPlayers) - 1) < AIplayers:
             positionx = rand.randrange(self.gameBoardWidth)
             positiony = rand.randrange(self.gameBoardHeight)            
+            for position in self.listOfPlayers:
+                if position.x == positionx and position.y == positiony:
+                    positionx = rand.randrange(self.gameBoardWidth)
+                    positiony = rand.randrange(self.gameBoardHeight)
+                for pos in self.listOfTreasures:
+                    if pos.x == positionx and pos.y == positiony:
+                        positionx = rand.randrange(self.gameBoardWidth)
+                        positiony = rand.randrange(self.gameBoardHeight)
+                    for posT in self.listOfWeapons:
+                        if posT == positionx and posT == positiony:
+                            positionx = rand.randrange(self.gameBoardWidth)
+                            positiony = rand.randrange(self.gameBoardHeight)
             player = AIPlayer(positionx,positiony,str(p))
             self.listOfPlayers.append(player)
             p += 1
@@ -55,6 +67,7 @@ class Game:
         # MAIN GAME LOOP to ask players what they want to do
         currentPlayerNum = 0
         while (len(self.listOfTreasures) >= 1):
+            
             # get the player object for the player whose turn it is
             currentPlayer = self.listOfPlayers[currentPlayerNum];
             # ask the player what they would like to do
@@ -81,8 +94,11 @@ class Game:
         # Determining the winner of the game
         total = 0
         for players in self.listOfPlayers:
-            if players.getPoints() >= total:
+            if players.getPoints() > total:
                 total = players.getPoints()
+                winner = players.gameBoardSymbol
+                print("Player " + str(winner) + " wins!")
+            if len(self.listOfPlayers) == 1:
                 winner = players.gameBoardSymbol
                 print("Player " + str(winner) + " wins!")
             
@@ -184,6 +200,7 @@ class Game:
                             print("!")
                             plyr.collectWeapons(weapon)
                             self.listOfWeapons.remove(weapon)  # remove the treasure from the list of available treasures
+                            print(plyr.strikerange)
                             break
             for ply in self.listOfPlayers:
                 if ply.x == plyr.x and ply.y == plyr.y:
@@ -198,7 +215,7 @@ class Game:
                 plyr.energy += random.randint(3,5)
         elif action == "a":
             for attack in self.listOfPlayers:
-                if attack.x != plyr.x and attack.y != plyr.y:
+                if attack.x != plyr.x and attack.y == plyr.y or attack.x == plyr.x and attack.y != plyr.y or attack.x != plyr.x and attack.y != plyr.y:
                     coordx = attack.x - plyr.x
                     coordy = attack.y - plyr.y
                     magXY = math.sqrt((coordx**2) + (coordy**2))
