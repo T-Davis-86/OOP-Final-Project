@@ -111,10 +111,11 @@ class Game:
                 winner = players.gameBoardSymbol
                 print("Player " + str(winner) + " wins!")
             # This is incase players didn't collect any points but eliminated all other players
-            if len(self.listOfPlayers) == 1:
-                winner = players.gameBoardSymbol
-                print("Player " + str(winner) + " wins!")
-            
+            else:
+                if len(self.listOfPlayers) == 1:
+                    winner = players.gameBoardSymbol
+                    print("Player " + str(winner) + " wins!")
+        
     def processPlayerInput(self, plyr, action) :
         global ordX, ordY
         if action == "m":
