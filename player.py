@@ -1,6 +1,5 @@
 from randomNum import Random
 import math
-import random
 
 class Player :
     # the constructor (initialize all Player variables)
