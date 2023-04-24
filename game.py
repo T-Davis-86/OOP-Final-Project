@@ -173,7 +173,7 @@ class Game:
                         print("Wrong Input!")
             # This is for just the AI Players algorithm
             elif (type(plyr) == AIPlayer):
-                plyr.AImove(self.gameBoardWidth,self.gameBoardHeight,self.listOfPlayers,self.listOfTreasures,self.difficulty,plyr,rand.randrange())
+                plyr.AImove(self.gameBoardWidth,self.gameBoardHeight,self.listOfPlayers,self.listOfTreasures,self.listOfWeapons,self.difficulty,plyr)
 
                 
 
