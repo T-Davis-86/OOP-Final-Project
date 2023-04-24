@@ -8,18 +8,27 @@ from weapon import Weapon
 import math
 from player import AIPlayer
 import random
+from os import system, name
+from time import sleep
 if len(sys.argv) > 1:
   rand.setSeed(int(sys.argv[1]))
-
+def clear():
+    if name == 'nt':
+        _ = system('cls')
+    # Clear screen for mac and linux
+    else:
+     _ = system('clear')
+    # Clear screen for Windows
 class Game:
     
     # the constructor (initialize all game variables)
-    def __init__(self, width, height,numPlayers,AIplayers):  
+    def __init__(self, width, height,numPlayers,AIplayers,diff):  
         self.gameBoardWidth = width;
         self.gameBoardHeight = height;
         self.listOfPlayers = []
         self.listOfTreasures = []
         self.listOfWeapons = []
+        self.difficulty = diff
         p = 1
 
         # Creating the number of players designated by the user
@@ -33,27 +42,14 @@ class Game:
         
         # Creating the number of AI Players as designated by user
 
-        while (len(self.listOfPlayers) - 1) < AIplayers:
+        for number in range(AIplayers):
             positionx = rand.randrange(self.gameBoardWidth)
             positiony = rand.randrange(self.gameBoardHeight) 
-
-            # Check to make sure players and items aren't stacked on top of one another
-                       
-            for position in self.listOfPlayers:
-                if position.x == positionx and position.y == positiony:
-                    positionx = rand.randrange(self.gameBoardWidth)
-                    positiony = rand.randrange(self.gameBoardHeight)
-                for pos in self.listOfTreasures:
-                    if pos.x == positionx and pos.y == positiony:
-                        positionx = rand.randrange(self.gameBoardWidth)
-                        positiony = rand.randrange(self.gameBoardHeight)
-                    for posT in self.listOfWeapons:
-                        if posT == positionx and posT == positiony:
-                            positionx = rand.randrange(self.gameBoardWidth)
-                            positiony = rand.randrange(self.gameBoardHeight)
             player = AIPlayer(positionx,positiony,str(p))
             self.listOfPlayers.append(player)
             p += 1
+
+
 
         # Creating all the items for the game
 
@@ -67,21 +63,39 @@ class Game:
         self.listOfTreasures.append(t4)
         t5 = Treasure("emerald","E",35,rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight))
         self.listOfTreasures.append(t5)
-        w1 = Weapon("gun", "/", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
-        self.listOfWeapons.append(w1)
-        w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
-        self.listOfWeapons.append(w2)
+        if numPlayers > 3:
+            w1 = Weapon("gun", "/", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
+            self.listOfWeapons.append(w1)
+            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
+            self.listOfWeapons.append(w2)
+            w1 = Weapon("gun", "/", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
+            self.listOfWeapons.append(w1)
+            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
+            self.listOfWeapons.append(w2)
+        else:
+            w1 = Weapon("gun", "/", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
+            self.listOfWeapons.append(w1)
+            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
+            self.listOfWeapons.append(w2)
 
     def play(self):
         self.printInstructions()
-        self.drawUpdatedGameBoard()
+        # This while loop is to prevent players and items from being stacked
+        stack = True
+        while stack == True:
+            self.drawUpdatedGameBoard()
+            for ppl in self.listOfPlayers:
+                for items in self.listOfTreasures:
+                    for weaPons in self.listOfWeapons:
+                        if ppl.x == items.x and ppl.y == items.y or ppl.x == weaPons.x and ppl.y == weaPons.y or items.x == weaPons.x and items.y == weaPons.y:
+                            stack = True
+                        else:
+                            stack = False
         # MAIN GAME LOOP to ask players what they want to do
         currentPlayerNum = 0
         while (len(self.listOfTreasures) >= 1):
-            
             # get the player object for the player whose turn it is
             currentPlayer = self.listOfPlayers[currentPlayerNum];
-            
             # ask the player what they would like to do
             if (type(currentPlayer) == AIPlayer):
                 if currentPlayer.energy <= 2.5:
@@ -89,12 +103,34 @@ class Game:
                 elif currentPlayer.energy > 2:
                     choice = "m"
                 print("Player " + str(currentPlayer.gameBoardSymbol) +", do you want to (m)ove or (r)est? ", choice)
+                sleep(2)
                 self.processPlayerInput(currentPlayer,choice)
+                sleep(2)
             else:
-                print("Player " + str(currentPlayer.gameBoardSymbol) +", do you want to (m)ove or (r)est? ", end ="")
-                choice = input("")
-                self.processPlayerInput(currentPlayer, choice)
+                if currentPlayer.strikerange > 0:
+                    q = True
+                    while q == True:                 
+                        print("Player " + str(currentPlayer.gameBoardSymbol) +", do you want to (m)ove or (r)est or (a)ttack? ", end ="")
+                        choice = input("")
+                        if choice == "m" or choice == "r" or choice == "a":
+                            self.processPlayerInput(currentPlayer, choice)
+                            q = False
+                        else:
+                            print("Wrong Input")
+
+                else:
+                    z = True
+                    while z == True:
+                        print("Player " + str(currentPlayer.gameBoardSymbol) +", do you want to (m)ove or (r)est? ", end ="")
+                        choice = input("")
+                        if choice == "m" or choice == "r":
+                            self.processPlayerInput(currentPlayer, choice)
+                            z = False
+                        else:
+                            print("Wrong Input")
             # show the updated player information and game board
+            sleep(.5)
+            clear()
             self.printUpdatedPlayerInformation()
             self.drawUpdatedGameBoard()
             if len(self.listOfPlayers) == 1:
@@ -120,10 +156,21 @@ class Game:
         global ordX, ordY
         if action == "m":
             if (type(plyr) == Player):  # move
-                direction = input("Which direction (r, l, u, or d)? ")
-                distance = int(input("How Far? "))
-                plyr.move(direction, distance, self.gameBoardWidth, self.gameBoardHeight, plyr.x, plyr.y)
-            
+                s = True
+                while s == True:
+                    direction = input("Which direction (r, l, u, or d)? ")
+                    if direction == "r" or direction == "l" or direction == "u" or direction == "d":
+                        z = True
+                        while z == True: 
+                            distance = int(input("How Far? "))
+                            if distance > 0:
+                                plyr.move(direction, distance, self.gameBoardWidth, self.gameBoardHeight, plyr.x, plyr.y)
+                                z = False
+                                s = False
+                            else:
+                                print("Wrong Input!")
+                    else:
+                        print("Wrong Input!")
             # This is for just the AI Players algorithm
             elif (type(plyr) == AIPlayer):
                 closestPlayer = math.sqrt((self.gameBoardWidth**2) + (self.gameBoardHeight**2))
@@ -155,7 +202,7 @@ class Game:
                     TordY = shortY
                 
                 # AI Player deciding whether to attack Player or get Treasure by which is closer                
-                
+                # uses the coordinates from the closest item to determine what approach to take
                 if closestPlayer < closestTreasure:
                     closestObject = closestPlayer
                     ordX = PordX
@@ -171,8 +218,8 @@ class Game:
                         ordY = TordY
                 
                 # AI Player deciding what direction and how far to move
-                
-                if closestObject <= 6:
+                # uses the coordinates from above to determine what values to use
+                if closestObject <= self.difficulty:
                     if abs(ordX) >= abs(ordY):
                         if ordX != 0:
                             if ordX < 0:
@@ -195,12 +242,13 @@ class Game:
                     plyr.move(direction,distance,self.gameBoardWidth,self.gameBoardHeight, plyr.x, plyr.y)
                 
                 # AI player will teleport if distance from other players is too far and will lose energy each time
-                elif closestObject > 6:
+                elif closestObject > self.difficulty:
                     plyr.x = rand.randrange(self.gameBoardWidth)
                     plyr.y = rand.randrange(self.gameBoardHeight)
                     plyr.energy = plyr.energy - 1
                     print("Player Teleported!")
- 
+                
+
             # check to see if player moved to the location of another game item
             for treasure in self.listOfTreasures:
                 if plyr.x == treasure.x and plyr.y == treasure.y:
@@ -217,7 +265,6 @@ class Game:
                             print("!")
                             plyr.collectWeapons(weapon)
                             self.listOfWeapons.remove(weapon)  # remove the treasure from the list of available treasures
-                            print(plyr.strikerange)
                             break
             
             # This is for eliminating players
@@ -227,13 +274,14 @@ class Game:
                         print("You eliminated player", ply.gameBoardSymbol, "from the game!")
                         self.listOfPlayers.remove(ply)
                         break
+        
         # Different amounts of energy when resting for players vs. AI Players
         elif action == "r":
             if (type(plyr) == Player):
                 plyr.energy += 4.0
             elif (type(plyr) == AIPlayer):
                 plyr.energy += random.randint(3,5)
-        
+            
         # The attack action which allows only real players use weapons
         elif action == "a":
             for attack in self.listOfPlayers:
@@ -245,7 +293,7 @@ class Game:
                     if magXY <= plyr.strikerange:
                         print("You eliminated player", attack.gameBoardSymbol, "from the game!")
                         self.listOfPlayers.remove(attack)
-        
+            
         # For if a wrong input was entered              
         else :
             print("Sorry, that is not a valid choice")
@@ -256,7 +304,10 @@ class Game:
             print("Player " + p.gameBoardSymbol + " has " + str(p.getPoints()) + " points and has " + str(p.energy) + " energy")
 
     # Creation of the gameboard - Didn't make any changes here  
-    def drawUpdatedGameBoard(self) :     
+    def drawUpdatedGameBoard(self) : 
+        clear()
+        self.printInstructions()
+        self.printUpdatedPlayerInformation()    
         # loop through each game board space and either print the gameboard symbol
         # for what is located there or print a dot to represent nothing is there
         for y in range(0,self.gameBoardHeight):
@@ -274,6 +325,7 @@ class Game:
                 print(symbolToPrint,end="")
             print() # go to next row
         print()
+            # Check to make sure players and items aren't stacked on top of one another           
 
     # Game Instructions - I didn't make any changes here   
     def printInstructions(self) :
