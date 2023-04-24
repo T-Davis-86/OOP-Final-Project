@@ -152,7 +152,7 @@ class AIPlayer(Player):
 
                     self.teleport(gameBoardWidth,gameBoardHeight,plyr,listOfPlayers,listOfTreasures,listOfWeapons)
 
-
+# This is the teleport method to allow AI player to move close with out stacking on top of any other player or item
     def teleport(self,gameBoardWidth,gameBoardHeight,plyr,listOfPlayers,listOfItems,listOfWeapons):
         e = True
         while e == True:
