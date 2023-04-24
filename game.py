@@ -293,7 +293,7 @@ class Game:
                     if magXY <= plyr.strikerange:
                         print("You eliminated player", attack.gameBoardSymbol, "from the game!")
                         self.listOfPlayers.remove(attack)
-            
+                               
         # For if a wrong input was entered              
         else :
             print("Sorry, that is not a valid choice")
@@ -302,12 +302,15 @@ class Game:
     def printUpdatedPlayerInformation(self):
         for p in self.listOfPlayers:
             print("Player " + p.gameBoardSymbol + " has " + str(p.getPoints()) + " points and has " + str(p.energy) + " energy")
-
+            if p.strikerange > 0:
+                print("Player "+ str(p.gameBoardSymbol) + " You have a weapon equipped with a range of " + str(p.strikerange) + ".")
+    
+    
     # Creation of the gameboard - Didn't make any changes here  
     def drawUpdatedGameBoard(self) : 
         clear()
         self.printInstructions()
-        self.printUpdatedPlayerInformation()    
+        self.printUpdatedPlayerInformation()
         # loop through each game board space and either print the gameboard symbol
         # for what is located there or print a dot to represent nothing is there
         for y in range(0,self.gameBoardHeight):
