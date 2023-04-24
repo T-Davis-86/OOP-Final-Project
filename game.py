@@ -5,11 +5,11 @@ import sys
 from randomNum import Random
 rand= Random()
 from weapon import Weapon
-import math
 from player import AIPlayer
-import random
 from os import system, name
 from time import sleep
+import random
+import math
 if len(sys.argv) > 1:
   rand.setSeed(int(sys.argv[1]))
 def clear():
@@ -173,80 +173,8 @@ class Game:
                         print("Wrong Input!")
             # This is for just the AI Players algorithm
             elif (type(plyr) == AIPlayer):
-                closestPlayer = math.sqrt((self.gameBoardWidth**2) + (self.gameBoardHeight**2))
-                closestTreasure = math.sqrt((self.gameBoardWidth**2) + (self.gameBoardHeight**2))
-                
-                # AI Player compares whats closer: Player or treasure by calculating the magnitude of a vector
-                for allplayers in self.listOfPlayers:
-                    if allplayers.x != plyr.x and allplayers.y != plyr.y or allplayers.x == plyr.x and allplayers.y != plyr.y or allplayers.x != plyr.x and allplayers.y == plyr.y:
-                        PordX = allplayers.x - plyr.x
-                        PordY = allplayers.y - plyr.y
-                        playersXY = math.sqrt((PordX**2) + (PordY**2))
-                        if playersXY < closestPlayer:
-                            closestPlayer = playersXY
-                            closeP = PordX
-                            closeP = PordX
-                    PordX = closeP
-                    PordX = closeP
-                for tres in self.listOfTreasures:
-                    if tres.x != plyr.x and tres.y != plyr.y or tres.x == plyr.x and tres.y != plyr.y or tres.x != plyr.x and tres.y == plyr.y:
-                        TordX = tres.x - plyr.x
-                        TordY = tres.y - plyr.y
-                        tresureXY = math.sqrt((TordX**2) + (TordY**2))
-                        #print(tres.name,"(",tres.x,",",tres.y,")", "Distance:",tresureXY)
-                        if tresureXY < closestTreasure:
-                            closestTreasure = tresureXY
-                            shortX = TordX
-                            shortY = TordY
-                    TordX = shortX
-                    TordY = shortY
-                
-                # AI Player deciding whether to attack Player or get Treasure by which is closer                
-                # uses the coordinates from the closest item to determine what approach to take
-                if closestPlayer < closestTreasure:
-                    closestObject = closestPlayer
-                    ordX = PordX
-                    ordY = PordY
-                elif closestPlayer >= closestTreasure:
-                    if (closestPlayer - closestTreasure) <= 1:
-                        closestObject = closestPlayer
-                        ordX = PordX
-                        ordY = PordY
-                    else:    
-                        closestObject = closestTreasure
-                        ordX = TordX
-                        ordY = TordY
-                
-                # AI Player deciding what direction and how far to move
-                # uses the coordinates from above to determine what values to use
-                if closestObject <= self.difficulty:
-                    if abs(ordX) >= abs(ordY):
-                        if ordX != 0:
-                            if ordX < 0:
-                                direction = "l"
-                                distance = abs(ordX)
-                            elif ordX > 0:
-                                direction = "r"
-                                distance = abs(ordX)
-                    elif abs(ordY) > abs(ordX):
-                        if ordY != 0:
-                            if ordY < 0:
-                                direction = "u"
-                                distance = abs(ordY)
-                            elif ordY > 0:
-                                direction = "d"
-                                distance = abs(ordY)
-                    print("Which direction (r, l, u, or d)? ",direction)
-                    print("How Far? ", distance)
-                    # Uses the same player move method as regular players
-                    plyr.move(direction,distance,self.gameBoardWidth,self.gameBoardHeight, plyr.x, plyr.y)
-                
-                # AI player will teleport if distance from other players is too far and will lose energy each time
-                elif closestObject > self.difficulty:
-                    plyr.x = rand.randrange(self.gameBoardWidth)
-                    plyr.y = rand.randrange(self.gameBoardHeight)
-                    plyr.energy = plyr.energy - 1
-                    print("Player Teleported!")
+                plyr.AImove(self.gameBoardWidth,self.gameBoardHeight,self.listOfPlayers,self.listOfTreasures,self.difficulty,plyr,rand.randrange())
+
                 
 
             # check to see if player moved to the location of another game item
@@ -338,4 +266,3 @@ class Game:
         for treasure in self.listOfTreasures :
             print( "   " + treasure.name + "(" + treasure.gameBoardSymbol + ") " + str(treasure.pointValue) )
         print()
-    

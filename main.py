@@ -23,7 +23,7 @@ while v == True:
             AIrange = 6
             break
         elif difficulty == "h":
-            AIrange = 8
+            AIrange = 10
             break
         else:
             print("Incorrect input!")
@@ -36,3 +36,5 @@ while v == True:
 
 g = Game(w,h,numPlayers,AIplayers,AIrange)
 g.play()
+
+end = input("Thank you for playing...Press enter to exit")
