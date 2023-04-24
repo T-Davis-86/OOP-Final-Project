@@ -1,4 +1,5 @@
 from randomNum import Random
+rand= Random()
 import math
 
 class Player :
@@ -77,7 +78,7 @@ class AIPlayer(Player):
         Player.__init__(self,initialX, initialY, symb)
 
 # this method contains how AI players decide whether to attack other players or go after items
-    def AImove(self,gameBoardWidth,gameBoardHeight,listOfPlayers,listOfTreasures,difficulty,plyr,random):
+    def AImove(self,gameBoardWidth,gameBoardHeight,listOfPlayers,listOfTreasures,listOfWeapons,difficulty,plyr,):
                 closestPlayer = math.sqrt((gameBoardWidth**2) + (gameBoardHeight**2))
                 closestTreasure = math.sqrt((gameBoardWidth**2) + (gameBoardHeight**2))
                 
@@ -148,7 +149,22 @@ class AIPlayer(Player):
                 
                 # AI player will teleport if distance from other players is too far and will lose energy each time
                 elif closestObject > difficulty:
-                    plyr.x = random(gameBoardWidth)
-                    plyr.y = random(gameBoardHeight)
-                    plyr.energy = plyr.energy - 1
-                    print("Player Teleported!")
+
+                    self.teleport(gameBoardWidth,gameBoardHeight,plyr,listOfPlayers,listOfTreasures,listOfWeapons)
+
+
+    def teleport(self,gameBoardWidth,gameBoardHeight,plyr,listOfPlayers,listOfItems,listOfWeapons):
+        e = True
+        while e == True:
+            plyr.x = rand.randrange(gameBoardWidth)
+            plyr.y = rand.randrange(gameBoardHeight)
+            for plrPos in listOfPlayers:
+                if plrPos.x != plyr.x and plrPos.y != plyr.y:
+                    for itmPos in listOfItems:
+                        if itmPos.x != plyr.x and itmPos.y != plyr.y:
+                            for WpPos in listOfWeapons:
+                                if WpPos.x != plyr.x and WpPos.y != plyr.y:
+                                    e = False
+                                    break
+        plyr.energy = plyr.energy - 1
+        print("Player Teleported!")
