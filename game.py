@@ -205,10 +205,8 @@ class Game:
         
         # Different amounts of energy when resting for players vs. AI Players
         elif action == "r":
-            if (type(plyr) == Player):
-                plyr.energy += 4.0
-            elif (type(plyr) == AIPlayer):
-                plyr.energy += random.randint(3,5)
+            plyr.rest(plyr)
+
             
         # The attack action which allows only real players use weapons
         elif action == "a":

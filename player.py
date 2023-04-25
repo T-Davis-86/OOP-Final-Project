@@ -1,7 +1,7 @@
 from randomNum import Random
 rand= Random()
 import math
-
+import random
 class Player :
     # the constructor (initialize all Player variables)
     def __init__(self, initialX, initialY, symb) :     
@@ -70,6 +70,13 @@ class Player :
                 return value
             value += 1
         return value
+    
+    # rest method and determines how much energy is gained upon a rest by plyer type
+    def rest(self,plyr):
+        if (type(plyr) == Player):
+            plyr.energy += 4.0
+        elif (type(plyr) == AIPlayer):
+            plyr.energy += random.randint(3,5)
 
 # this is the AI class that inherets from the player classes attributes
 class AIPlayer(Player):
