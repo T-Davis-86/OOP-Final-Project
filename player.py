@@ -2,6 +2,8 @@ from randomNum import Random
 rand= Random()
 import math
 import random
+from time import sleep
+
 class Player :
     # the constructor (initialize all Player variables)
     def __init__(self, initialX, initialY, symb) :     
@@ -34,25 +36,25 @@ class Player :
                 longest = distant.strikerange
                 self.strikerange = longest
         
-    def move(self, direction, distanceToMove, boardWidth, boardHeight, posX, posY):
+    def move(self, direction, distanceToMove, boardWidth, boardHeight, listOfPlayers,listOfTreasures,difficulty,Weapons):
         # moving the players around the board and keeping players from going off the board
         if direction == "l":
-            if distanceToMove <= (0 + posX): 
+            if distanceToMove <= (0 + self.x): 
                 self.x = self.x - self.enrgy(distanceToMove)           
             else:
                 print("Too Far!")
         elif direction == "r":
-            if distanceToMove < (boardWidth - posX):
+            if distanceToMove < (boardWidth - self.x):
                 self.x = self.x + self.enrgy(distanceToMove)    
             else:
                 print("Too Far!")
         elif direction == "u":
-            if int(distanceToMove) <= (0 + posY):  
+            if int(distanceToMove) <= (0 + self.y):  
                 self.y = self.y - self.enrgy(distanceToMove)
             else:
                 print("Too Far!")           
         elif direction == "d":
-            if distanceToMove < (boardHeight - posY):
+            if distanceToMove < (boardHeight - self.y):
                 self.y = self.y + self.enrgy(distanceToMove)
             else:
                 print("Too Far!")  
@@ -72,11 +74,10 @@ class Player :
         return value
     
     # rest method and determines how much energy is gained upon a rest by plyer type
-    def rest(self,plyr):
-        if (type(plyr) == Player):
-            plyr.energy += 4.0
-        elif (type(plyr) == AIPlayer):
-            plyr.energy += random.randint(3,5)
+    def rest(self):
+        self.energy += 4.0
+        
+            
 
 # this is the AI class that inherets from the player classes attributes
 class AIPlayer(Player):
@@ -85,50 +86,44 @@ class AIPlayer(Player):
         Player.__init__(self,initialX, initialY, symb)
 
 # this method contains how AI players decide whether to attack other players or go after items
-    def AImove(self,gameBoardWidth,gameBoardHeight,listOfPlayers,listOfTreasures,listOfWeapons,difficulty,plyr,):
+    def move(self,direction, distance, gameBoardWidth, gameBoardHeight, listOfPlayers, listOfTreasures, difficulty, listOfWeapons):
                 closestPlayer = math.sqrt((gameBoardWidth**2) + (gameBoardHeight**2))
                 closestTreasure = math.sqrt((gameBoardWidth**2) + (gameBoardHeight**2))
                 
                 # AI Player compares whats closer: Player or treasure by calculating the magnitude of a vector
                 for allplayers in listOfPlayers:
-                    if allplayers.x != plyr.x and allplayers.y != plyr.y or allplayers.x == plyr.x and allplayers.y != plyr.y or allplayers.x != plyr.x and allplayers.y == plyr.y:
-                        PordX = allplayers.x - plyr.x
-                        PordY = allplayers.y - plyr.y
+                    if allplayers.x != self.x and allplayers.y != self.y or allplayers.x == self.x and allplayers.y != self.y or allplayers.x != self.x and allplayers.y == self.y:
+                        PordX = allplayers.x - self.x
+                        PordY = allplayers.y - self.y
                         playersXY = math.sqrt((PordX**2) + (PordY**2))
                         if playersXY < closestPlayer:
                             closestPlayer = playersXY
-                            closeP = PordX
-                            closeP = PordX
-                    PordX = closeP
-                    PordX = closeP
+                            closePx = PordX
+                            closePy = PordY
                 for tres in listOfTreasures:
-                    if tres.x != plyr.x and tres.y != plyr.y or tres.x == plyr.x and tres.y != plyr.y or tres.x != plyr.x and tres.y == plyr.y:
-                        TordX = tres.x - plyr.x
-                        TordY = tres.y - plyr.y
+                    if tres.x != self.x and tres.y != self.y or tres.x == self.x and tres.y != self.y or tres.x != self.x and tres.y == self.y:
+                        TordX = tres.x - self.x
+                        TordY = tres.y - self.y
                         tresureXY = math.sqrt((TordX**2) + (TordY**2))
-                        #print(tres.name,"(",tres.x,",",tres.y,")", "Distance:",tresureXY)
                         if tresureXY < closestTreasure:
                             closestTreasure = tresureXY
-                            shortX = TordX
-                            shortY = TordY
-                    TordX = shortX
-                    TordY = shortY
-                
+                            closeTx = TordX
+                            closeTy = TordY
                 # AI Player deciding whether to attack Player or get Treasure by which is closer                
                 # uses the coordinates from the closest item to determine what approach to take
                 if closestPlayer < closestTreasure:
                     closestObject = closestPlayer
-                    ordX = PordX
-                    ordY = PordY
+                    ordX = closePx
+                    ordY = closePy
                 elif closestPlayer >= closestTreasure:
                     if (closestPlayer - closestTreasure) <= 1:
                         closestObject = closestPlayer
-                        ordX = PordX
-                        ordY = PordY
+                        ordX = closePx
+                        ordY = closePy
                     else:    
                         closestObject = closestTreasure
-                        ordX = TordX
-                        ordY = TordY
+                        ordX = closeTx
+                        ordY = closeTy
                 
                 # AI Player deciding what direction and how far to move
                 # uses the coordinates from above to determine what values to use
@@ -149,29 +144,25 @@ class AIPlayer(Player):
                             elif ordY > 0:
                                 direction = "d"
                                 distance = abs(ordY)
-                    print("Which direction (r, l, u, or d)? ",direction)
-                    print("How Far? ", distance)
+                    print("Which direction (r, l, u, or d)? ",end= "")
+                    sleep(1)
+                    print(direction)
+                    print("How Far? ", end="")
+                    sleep(1)
+                    print(distance)
                     # Uses the same player move method as regular players
-                    plyr.move(direction,distance,gameBoardWidth,gameBoardHeight, plyr.x, plyr.y)
+                    Player.move(self,direction, distance, gameBoardWidth, gameBoardHeight, listOfPlayers, listOfTreasures, difficulty, listOfWeapons)
                 
                 # AI player will teleport if distance from other players is too far and will lose energy each time
                 elif closestObject > difficulty:
-
-                    self.teleport(gameBoardWidth,gameBoardHeight,plyr,listOfPlayers,listOfTreasures,listOfWeapons)
+                    self.teleport(gameBoardWidth,gameBoardHeight,listOfPlayers,listOfTreasures, listOfWeapons)
 
 # This is the teleport method to allow AI player to move close with out stacking on top of any other player or item
-    def teleport(self,gameBoardWidth,gameBoardHeight,plyr,listOfPlayers,listOfItems,listOfWeapons):
-        e = True
-        while e == True:
-            plyr.x = rand.randrange(gameBoardWidth)
-            plyr.y = rand.randrange(gameBoardHeight)
-            for plrPos in listOfPlayers:
-                if plrPos.x != plyr.x and plrPos.y != plyr.y:
-                    for itmPos in listOfItems:
-                        if itmPos.x != plyr.x and itmPos.y != plyr.y:
-                            for WpPos in listOfWeapons:
-                                if WpPos.x != plyr.x and WpPos.y != plyr.y:
-                                    e = False
-                                    break
-        plyr.energy = plyr.energy - 1
+    def teleport(self,gameBoardWidth,gameBoardHeight,listOfPlayers,listOfItems,listOfWeapons):
+        self.x = rand.randrange(gameBoardWidth)
+        self.y = rand.randrange(gameBoardHeight)       
+        self.energy = self.energy - 1
         print("Player Teleported!")
+    
+    def rest(self):
+        self.energy += random.randint(3,5)

@@ -1,5 +1,6 @@
 from game import Game
 
+
 i = True
 v = True
 b = True
@@ -15,26 +16,25 @@ while b == True:
         print("Incorrect input!")
 # Number for how many AI Players to create
 while v == True:
-    AIplayers = int(input("How many Bots would you like to play with?"))
+    AIplayers = int(input("How many Bots would you like to play with? "))
     if AIplayers > 0:
         # Player decides how aggressive the AI Players will be
-        difficulty = input("How aggressive should the Bots be: (e)asy or (h)ard?")
+        difficulty = input("How aggressive should the Bots be: (e)asy or (h)ard? ")
         if difficulty == "e":
-            AIrange = 6
+            AIrange = w / 2
             break
         elif difficulty == "h":
-            AIrange = 10
+            AIrange = w / 1.25
             break
         else:
             print("Incorrect input!")
             
     elif AIplayers == 0:
-        AIrange = 6
+        AIrange = w / 2
         break
     else:
         print("Incorrect input!")
 
 g = Game(w,h,numPlayers,AIplayers,AIrange)
 g.play()
-
-end = input("Thank you for playing...Press enter to exit")
+end = input("Thanks for Playing... Press enter to exit.")
