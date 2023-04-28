@@ -160,7 +160,7 @@ class AIPlayer(Player):
 # This is the teleport method to allow AI player to move close with out stacking on top of any other player or item
     def teleport(self,gameBoardWidth,gameBoardHeight,listOfPlayers,listOfItems,listOfWeapons):
         tele = True
-        print(len(listOfPlayers))
+        #print(len(listOfPlayers))
         while tele == True:
             tele1 = 0
             tele2 = 0
@@ -169,7 +169,7 @@ class AIPlayer(Player):
             tele5 = 1
             self.x = random.randint(0,gameBoardWidth)
             self.y = random.randint(0,gameBoardHeight)
-            print(self.x,self.y,self.gameBoardSymbol)
+            #print(self.x,self.y,self.gameBoardSymbol)
             for items in listOfItems:
                 #print(items.x,items.y,items.gameBoardSymbol)
                 if self.x != items.x and self.x != items.y or self.x != items.x and self.y == items.y or self.x == items.x and self.y != items.y:
