@@ -64,18 +64,18 @@ class Game:
         t5 = Treasure("emerald","E",35,rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight))
         self.listOfTreasures.append(t5)
         if numPlayers > 3:
-            w1 = Weapon("gun", "X", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
+            w1 = Weapon("bazooka", "!", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
             self.listOfWeapons.append(w1)
-            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
+            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 2)
             self.listOfWeapons.append(w2)
-            w1 = Weapon("gun", "X", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
+            w1 = Weapon("bazooka", "!", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
             self.listOfWeapons.append(w1)
-            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
+            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 2)
             self.listOfWeapons.append(w2)
         else:
-            w1 = Weapon("gun", "X", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 7)
+            w1 = Weapon("bazooka", "!", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
             self.listOfWeapons.append(w1)
-            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 4)
+            w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 2)
             self.listOfWeapons.append(w2)
 
     def play(self):

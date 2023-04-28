@@ -21,16 +21,16 @@ while v == True:
         # Player decides how aggressive the AI Players will be
         difficulty = input("How aggressive should the Bots be: (e)asy or (h)ard? ")
         if difficulty == "e":
-            AIrange = w / 2
+            AIrange = 6
             break
         elif difficulty == "h":
-            AIrange = w / 1.25
+            AIrange = 10
             break
         else:
             print("Incorrect input!")
             
     elif AIplayers == 0:
-        AIrange = w / 2
+        AIrange = 6
         break
     else:
         print("Incorrect input!")
