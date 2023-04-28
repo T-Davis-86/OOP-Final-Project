@@ -205,6 +205,7 @@ class Game:
                 if ply.x == plyr.x and ply.y == plyr.y:
                     if ply.gameBoardSymbol != plyr.gameBoardSymbol:
                         print("You eliminated player", ply.gameBoardSymbol, "from the game!")
+                        print(".-*!BaM!*-.")
                         self.listOfPlayers.remove(ply)
                         break
         
@@ -223,6 +224,7 @@ class Game:
                     magXY = math.sqrt((coordx**2) + (coordy**2))
                     if magXY <= plyr.strikerange:
                         print("You eliminated player", attack.gameBoardSymbol, "from the game!")
+                        print(".-*!BooM!*-.")
                         self.listOfPlayers.remove(attack)
                                
         # For if a wrong input was entered              
