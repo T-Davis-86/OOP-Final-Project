@@ -133,28 +133,26 @@ class Game:
             clear()
             self.printUpdatedPlayerInformation()
             self.drawUpdatedGameBoard()
-            if len(self.listOfPlayers) == 1:
-                break
+
             # update whose turn it is
             currentPlayerNum += 1
             if currentPlayerNum >= len(self.listOfPlayers):
                 currentPlayerNum = 0
-        
-        # This is incase players didn't collect any points but eliminated all other players
-        if len(self.listOfPlayers) == 1:
-            winner = players.gameBoardSymbol
-            print("Player " + str(winner) + " wins!")
-        
+            
+            # This is incase players didn't collect any points but eliminated all other players
+            if len(self.listOfPlayers) == 1:
+                winner = currentPlayer.gameBoardSymbol
+                break
+            
         # Determining the winner of the game
         total = 0
-        winner = " "
         for players in self.listOfPlayers:
             if players.getPoints() > total:
                 total = players.getPoints()
                 winner = players.gameBoardSymbol
-        print("Player " + str(winner) + " wins!")
 
-        
+        print("Player " + str(winner) + " wins!")
+            
 
         
     def processPlayerInput(self, plyr, action) :

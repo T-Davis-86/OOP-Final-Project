@@ -159,10 +159,42 @@ class AIPlayer(Player):
 
 # This is the teleport method to allow AI player to move close with out stacking on top of any other player or item
     def teleport(self,gameBoardWidth,gameBoardHeight,listOfPlayers,listOfItems,listOfWeapons):
-        self.x = rand.randrange(gameBoardWidth)
-        self.y = rand.randrange(gameBoardHeight)       
+        tele = True
+        print(len(listOfPlayers))
+        while tele == True:
+            tele1 = 0
+            tele2 = 0
+            tele3 = 0
+            tele4 = 0
+            tele5 = 1
+            self.x = random.randint(0,gameBoardWidth)
+            self.y = random.randint(0,gameBoardHeight)
+            print(self.x,self.y,self.gameBoardSymbol)
+            for items in listOfItems:
+                #print(items.x,items.y,items.gameBoardSymbol)
+                if self.x != items.x and self.x != items.y or self.x != items.x and self.y == items.y or self.x == items.x and self.y != items.y:
+                    tele1 += 1
+                    if tele1 == len(listOfItems):                          
+                        for wpons in listOfWeapons:
+                            #print(wpons.x,wpons.y,wpons.gameBoardSymbol)
+                            if self.x != wpons.x and self.y != wpons.y or self.x != wpons.x and self.y == wpons.y or self.x == wpons.x and self.y != wpons.y:
+                                tele2 += 1
+                                if tele2 == len(listOfWeapons):     
+                                    for players in listOfPlayers:
+                                        #print(players.x,players.y,players.gameBoardSymbol)
+                                        if self.x == players.x and self.y == players.y and self.gameBoardSymbol == players.gameBoardSymbol or self.x == players.x and self.y != players.y or self.x != players.x and self.y == players.y:
+                                            tele3 += 1
+                                            tele4 += 1
+                                            #print(tele3,tele4)
+                                            if tele3 == len(listOfPlayers) and tele4 == tele5:
+                                                tele = False
+                                        else:
+                                            tele3 += 1        
+
+
         self.energy = self.energy - 1
         print("Player Teleported!")
+
     
     def rest(self):
         self.energy += random.randint(3,5)
