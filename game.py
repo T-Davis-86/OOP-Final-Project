@@ -2,7 +2,7 @@ from treasure import Treasure
 from player import Player
 from randomNum import Random
 import sys
-from randomNum import Random
+#from randomNum import Random
 rand= Random()
 from weapon import Weapon
 from player import AIPlayer
@@ -135,25 +135,27 @@ class Game:
             self.drawUpdatedGameBoard()
             if len(self.listOfPlayers) == 1:
                 break
-            elif len(self.listOfTreasures) == 0:
-                total = currentPlayer.getPoints()
-                break
             # update whose turn it is
             currentPlayerNum += 1
             if currentPlayerNum >= len(self.listOfPlayers):
                 currentPlayerNum = 0
+        
+        # This is incase players didn't collect any points but eliminated all other players
+        if len(self.listOfPlayers) == 1:
+            winner = players.gameBoardSymbol
+            print("Player " + str(winner) + " wins!")
+        
         # Determining the winner of the game
         total = 0
+        winner = " "
         for players in self.listOfPlayers:
-            if players.getPoints() >= total:
+            if players.getPoints() > total:
                 total = players.getPoints()
                 winner = players.gameBoardSymbol
-                print("Player " + str(winner) + " wins!")
-                # This is incase players didn't collect any points but eliminated all other players
-            else:
-                if len(self.listOfPlayers) == 1:
-                    winner = players.gameBoardSymbol
-                    print("Player " + str(winner) + " wins!")
+        print("Player " + str(winner) + " wins!")
+
+        
+
         
     def processPlayerInput(self, plyr, action) :
         global ordX, ordY
