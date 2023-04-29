@@ -200,6 +200,7 @@ class Game:
                         print("You eliminated player", ply.gameBoardSymbol, "from the game!")
                         print(".-*!BaM!*-.")
                         self.listOfPlayers.remove(ply)
+                        sleep(1)
                         break
         
         # Different amounts of energy when resting for players vs. AI Players
@@ -219,6 +220,7 @@ class Game:
                         print("You eliminated player", attack.gameBoardSymbol, "from the game!")
                         print(".-*!BooM!*-.")
                         self.listOfPlayers.remove(attack)
+                        sleep(1)
                                
         # For if a wrong input was entered              
         else :
