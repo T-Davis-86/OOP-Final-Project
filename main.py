@@ -35,6 +35,6 @@ while v == True:
     else:
         print("Incorrect input!")
 
-g = Game(w,h,numPlayers,AIplayers,AIrange)
+g = Game(w, h, numPlayers, AIplayers, AIrange)
 g.play()
 end = input("Thanks for Playing... Press enter to exit.")

@@ -2,7 +2,6 @@ from treasure import Treasure
 from player import Player
 from randomNum import Random
 import sys
-#from randomNum import Random
 rand= Random()
 from weapon import Weapon
 from player import AIPlayer
@@ -10,8 +9,10 @@ from os import system, name
 from time import sleep
 import random
 import math
+
 if len(sys.argv) > 1:
   rand.setSeed(int(sys.argv[1]))
+
 def clear():
     if name == 'nt':
         _ = system('cls')
@@ -19,6 +20,8 @@ def clear():
     else:
      _ = system('clear')
     # Clear screen for Windows
+
+
 class Game:
     
     # the constructor (initialize all game variables)
@@ -33,7 +36,7 @@ class Game:
 
         # Creating the number of players designated by the user
 
-        for plyrs in range(numPlayers):
+        for plyrs in range(numPlayers):            
             positionx = rand.randrange(self.gameBoardWidth)
             positiony = rand.randrange(self.gameBoardHeight)
             player = Player(positionx,positiony,str(p))
@@ -41,16 +44,14 @@ class Game:
             p += 1
         
         # Creating the number of AI Players as designated by user
-
+            
         for number in range(AIplayers):
             positionx = rand.randrange(self.gameBoardWidth)
             positiony = rand.randrange(self.gameBoardHeight) 
             player = AIPlayer(positionx,positiony,str(p))
             self.listOfPlayers.append(player)
             p += 1
-
-
-
+        
         # Creating all the items for the game
 
         t1 = Treasure("silver","S", 20, rand.randrange(self.gameBoardWidth), rand.randrange(self.gameBoardHeight))
@@ -78,24 +79,16 @@ class Game:
             w2 = Weapon("grenade", "o", rand.randrange(self.gameBoardWidth),rand.randrange(self.gameBoardHeight), 2)
             self.listOfWeapons.append(w2)
 
+        #NoStacking(self.listOfPlayers,self.listOfTreasures,self.listOfWeapons)
+
     def play(self):
         self.printInstructions()
-        # This while loop is to prevent players and items from being stacked
-        stack = True
-        while stack == True:
-            self.drawUpdatedGameBoard()
-            for ppl in self.listOfPlayers:
-                for items in self.listOfTreasures:
-                    for weaPons in self.listOfWeapons:
-                        if ppl.x == items.x and ppl.y == items.y or ppl.x == weaPons.x and ppl.y == weaPons.y or items.x == weaPons.x and items.y == weaPons.y:
-                            stack = True
-                        else:
-                            stack = False
+        self.drawUpdatedGameBoard()
         # MAIN GAME LOOP to ask players what they want to do
         currentPlayerNum = 0
         while (len(self.listOfTreasures) >= 1):
             # get the player object for the player whose turn it is
-            currentPlayer = self.listOfPlayers[currentPlayerNum];
+            currentPlayer = self.listOfPlayers[currentPlayerNum]
             # ask the player what they would like to do
             if (type(currentPlayer) == AIPlayer):
                 if currentPlayer.energy <= 2.5:
@@ -245,29 +238,33 @@ class Game:
         self.printInstructions()
         self.printUpdatedPlayerInformation()
         # loop through each game board space and either print the gameboard symbol
-        # for what is located there or print a dot to represent nothing is there
+        # for what is located there or print an empty space to represent nothing is there
         print("-",end="")
         for c in range(0,self.gameBoardWidth):
-            print("----",end="")
+            print("------",end="")
         print() 
         for y in range(0,self.gameBoardHeight):
             print("|",end= "")
             for x in range(0,self.gameBoardWidth):
-                symbolToPrint = "   "
+                symbolToPrint = "     "
                 for treasure in self.listOfTreasures:
-                   if treasure.x == x and treasure.y == y:
-                      symbolToPrint = " "+treasure.gameBoardSymbol+" "
+                    if treasure.x == x and treasure.y == y:
+                       symbolToPrint = "  "+treasure.gameBoardSymbol+"  "
                 for player in self.listOfPlayers:
-                   if player.x == x and player.y == y:
-                      symbolToPrint = " "+player.gameBoardSymbol+" "
+                    if int(player.gameBoardSymbol) >= 10:
+                        if player.x == x and player.y == y:
+                            symbolToPrint = " "+player.gameBoardSymbol+"  "
+                    else:
+                        if player.x == x and player.y == y:
+                            symbolToPrint = "  "+player.gameBoardSymbol+"  "
                 for weapon in self.listOfWeapons:
                     if weapon.x == x and weapon.y == y:
-                        symbolToPrint = " "+weapon.gameBoardSymbol+" "
+                        symbolToPrint = "  "+weapon.gameBoardSymbol+"  "
                 print(symbolToPrint,end="|")
             print()
             print("-",end="")
             for r in range(0,self.gameBoardWidth):
-                print("----",end = "")
+                print("------",end = "")
             print()
              # go to next row
         print()
